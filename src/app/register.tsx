@@ -6,15 +6,39 @@ import { Button } from '@/components/button'
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
 
+const EVENT_ID = '9e9bd979-9d10-4915-b339-3786b1634f33'
+
 export default function Register() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  function handleRegister() {
-    if (!name.trim() || !email.trim()) {
-      return Alert.alert('Inscrição', 'Preencha todos os campos')
+  async function handleRegister() {
+    try {
+      if (!name.trim() || !email.trim()) {
+        return Alert.alert('Inscrição', 'Preencha todos os campos')
+      }
+      setIsLoading(true)
+
+      // const registerResponse = await api.post(`/events/${EVENT_ID}/attenddes`, {
+      //   name, email
+      // })
+
+      // if (registerResponse.data.atte) {
+      //   Alert.alert('Inscrição', 'inscrição realizada com sucesso !!!', [{ text: 'OK', onPress: () => router.push('/ticket') }])
+      // }
+      
+      router.push('/ticket')
+    } catch (error) {
+      // if (axios.isAxiosError(error)) {
+      //   if (String(error.response?.data.message).includes('already registered')) {
+      //     return Alert.alert('Inscrição', 'Este email já está cadastrado')
+      //   }
+      // }
+      Alert.alert('Inscrição', 'Não foi possivel fazer a inscrição')
+    } finally {
+      setIsLoading(false)
     }
-    router.push('/ticket')
   }
 
   return (
@@ -37,7 +61,7 @@ export default function Register() {
           />
           <Input.Field value={email} onChangeText={setEmail} placeholder='E-mail' keyboardType='email-address' />
         </Input>
-        <Button title='Realizar inscrição' onPress={handleRegister} />
+        <Button title='Realizar inscrição' isLoading={isLoading} onPress={handleRegister} />
         <Link href='/' className='text-gray-100 text-base font-bold text-center mt-8'>Já não possui ingresso?</Link>
       </View>
     </View>
